@@ -1,0 +1,67 @@
+From 78ceffb7af5624163b650a0ba8f3158731ba1a1f Mon Sep 17 00:00:00 2001
+From: Koichi Murase <myoga.murase@gmail.com>
+Date: Fri, 18 Jul 2025 10:47:14 +0900
+Subject: [PATCH] 1.626: fix compile errors
+
+---
+ src/jamcoll.F | 4 +++-
+ src/pyjet.f   | 2 +-
+ src/pythia.f  | 4 ++--
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/jamcoll.F b/src/jamcoll.F
+index 0e6b1a9..f6cebc4 100644
+--- a/src/jamcoll.F
++++ b/src/jamcoll.F
+@@ -1054,7 +1054,7 @@ c         if(coll(1,i).le.tmin.and.coll(1,i).gt.pard(1)+0.0001d0) then
+         end if
+   100 continue
+       if(nmins.gt.0) then
+-        imin=imins(1+int(rn()*nmins))
++        imin=imins(1+int(rn(0)*nmins))
+       end if
+ 
+ c...Search decay array for next decay event.
+@@ -6691,6 +6691,8 @@ c...LPC
+ c...Initialize some values for leading particle cascade.
+       include 'jam1.inc'
+       include 'jam2.inc'
++      parameter(mxchan=30)
++      dimension sigin(mxchan)
+       parameter (mxa=5)
+ c...Commonblock for LPC.
+       common /jamlpc1/wa0,wr0,ww,rho0,ext,idens,icscde
+diff --git a/src/pyjet.f b/src/pyjet.f
+index f3cfb91..12b6f56 100644
+--- a/src/pyjet.f
++++ b/src/pyjet.f
+@@ -1506,7 +1506,7 @@ C...Check flavours and invariant masses in parton systems.
+      $                                             n,k(1,2),k(n,2)
+             write(check(2),'(''mass='',g13.4,3(1x,g13.4))')
+      $                sqrt(dps(4)**2-dps(1)**2-dps(2)**2-dps(3)**2),
+-     $                dps(5),pjmass(1,2),pjmass(2,2)
++     $                dps(5),pjmass(k(1,2)),pjmass(k(2,2))
+             call jamerrm(3,2,'(PYPREP:) too small mass in jet system')
+             call pjlist(1)
+           endif
+diff --git a/src/pythia.f b/src/pythia.f
+index 546567b..821eb89 100644
+--- a/src/pythia.f
++++ b/src/pythia.f
+@@ -7760,11 +7760,11 @@ C...Fill jet configuration; return if incorrect kinematics.
+  
+ C...Angular orientation according to matrix element.
+         if(mstj(106).eq.1) then
+-          call pjxdif(nc,njet,kflc,p(id,5),chi,the,phi)
++          call pjxdif(nc,njet,kflc,p(id,5),chi,the,phi1)
+           if(mint(11).lt.0) the=paru(1)-the
+           cthe(1)=cos(the)
+           call pjrobo(nc+1,n,0d0,chi,0d0,0d0,0d0)
+-          call pjrobo(nc+1,n,the,phi,0d0,0d0,0d0)
++          call pjrobo(nc+1,n,the,phi1,0d0,0d0,0d0)
+         endif
+  
+ C...Boost partons to Z0 rest frame.
+-- 
+2.50.1
+
