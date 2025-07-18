@@ -1,0 +1,29 @@
+From febefda28c5ce461f3e17d00c9e2908bf8e244da Mon Sep 17 00:00:00 2001
+From: Koichi Murase <myoga.murase@gmail.com>
+Date: Fri, 18 Jul 2025 10:31:08 +0900
+Subject: [PATCH 2/2] 1.820: increase mxv
+
+---
+ src/jam1.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/jam1.inc b/src/jam1.inc
+index ced7092..22fba74 100644
+--- a/src/jam1.inc
++++ b/src/jam1.inc
+@@ -9,10 +9,10 @@ c...Maximum number of all particles.
+ c     parameter(mxv=800)   ! AGS Au+Au
+ c     parameter(mxv=2000)
+ c     parameter(mxv=30000)
+-c     parameter(mxv=100000)
++      parameter(mxv=200000)
+ c     parameter(mxv=3000)
+ c     parameter(mxv=5000)
+-      parameter(mxv=10000)
++c     parameter(mxv=10000)
+ c     parameter(mxv=30000)
+ 
+ c...The event record.
+-- 
+2.47.1
+
