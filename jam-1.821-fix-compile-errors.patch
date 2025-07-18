@@ -1,0 +1,76 @@
+From 3d46f368cd04390b4ed4ac797da50a0f05106aab Mon Sep 17 00:00:00 2001
+From: Koichi Murase <myoga.murase@gmail.com>
+Date: Fri, 18 Jul 2025 10:30:46 +0900
+Subject: [PATCH 1/2] 1.820: fix compile errors
+
+---
+ src/jamcoll.F | 6 ++++--
+ src/pyjet.f   | 2 +-
+ src/pythia.f  | 4 ++--
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/jamcoll.F b/src/jamcoll.F
+index c31aace..0000a9b 100644
+--- a/src/jamcoll.F
++++ b/src/jamcoll.F
+@@ -1254,7 +1254,7 @@ c         if(coll(1,i).le.tmin.and.coll(1,i).gt.pard(1)+0.0001d0) then
+         end if
+   100 continue
+       if(nmins.gt.0) then
+-        imin=imins(1+int(rn()*nmins))
++        imin=imins(1+int(rn(0)*nmins))
+       end if
+ 
+ c...Search decay array for next decay event.
+@@ -3357,7 +3357,7 @@ c.....Rotate momentum vector to new position.
+ 
+ c....EoS modified collision.
+       if(mstc(59).ge.101) then
+-         call jameoscol(i1,i2,pare(20),pr0,pxr,pyr,pzr,em1,em2)
++         call jameoscol(i1,i2,pr0,pxr,pyr,pzr,em1,em2)
+ 
+ c...Select repulsive or attractive orbit.
+       else if(mstc(59).ge.1) then
+@@ -7234,6 +7234,8 @@ c...LPC
+ c...Initialize some values for leading particle cascade.
+       include 'jam1.inc'
+       include 'jam2.inc'
++      parameter(mxchan=30)
++      dimension sigin(mxchan)
+       parameter (mxa=5)
+ c...Commonblock for LPC.
+       common /jamlpc1/wa0,wr0,ww,rho0,ext,idens,icscde
+diff --git a/src/pyjet.f b/src/pyjet.f
+index bdf8db9..90cb96b 100644
+--- a/src/pyjet.f
++++ b/src/pyjet.f
+@@ -1538,7 +1538,7 @@ C...Check flavours and invariant masses in parton systems.
+      $                                             n,k(1,2),k(n,2)
+             write(check(2),'(''mass='',g13.4,3(1x,g13.4))')
+      $                sqrt(dps(4)**2-dps(1)**2-dps(2)**2-dps(3)**2),
+-     $                dps(5),pjmass(1,2),pjmass(2,2)
++     $                dps(5),pjmass(k(1,2)),pjmass(k(2,2))
+             call jamerrm(3,2,'(PYPREP:) too small mass in jet system')
+             call pjlist(1)
+           endif
+diff --git a/src/pythia.f b/src/pythia.f
+index 546567b..821eb89 100644
+--- a/src/pythia.f
++++ b/src/pythia.f
+@@ -7760,11 +7760,11 @@ C...Fill jet configuration; return if incorrect kinematics.
+  
+ C...Angular orientation according to matrix element.
+         if(mstj(106).eq.1) then
+-          call pjxdif(nc,njet,kflc,p(id,5),chi,the,phi)
++          call pjxdif(nc,njet,kflc,p(id,5),chi,the,phi1)
+           if(mint(11).lt.0) the=paru(1)-the
+           cthe(1)=cos(the)
+           call pjrobo(nc+1,n,0d0,chi,0d0,0d0,0d0)
+-          call pjrobo(nc+1,n,the,phi,0d0,0d0,0d0)
++          call pjrobo(nc+1,n,the,phi1,0d0,0d0,0d0)
+         endif
+  
+ C...Boost partons to Z0 rest frame.
+-- 
+2.47.1
+
